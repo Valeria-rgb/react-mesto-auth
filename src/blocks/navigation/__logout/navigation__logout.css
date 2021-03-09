@@ -1,0 +1,22 @@
+.navigation__logout {
+  height: 22px;
+  color: #A9A9A9;
+  font-size: 18px;
+  line-height: 22px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: transparent;
+  padding: 0;
+  border: none;
+  margin-left: 24px;
+}
+
+.navigation__logout:focus {
+  outline: none;
+}
+
+.navigation__logout:hover {
+  opacity: 60%;
+  cursor: pointer;
+  transition: 0.2s ease;
+}

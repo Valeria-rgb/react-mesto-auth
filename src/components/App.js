@@ -8,6 +8,7 @@ import EditProfilePopup from '../components/EditProfilePopup';
 import EditAvatarPopup from '../components/EditAvatarPopup';
 import AddPlacePopup from '../components/AddPlacePopup';
 import ConfirmDeletePopup from "../components/ConfirmDeletePopup";
+import InfoTooltip from "../components/InfoTooltip"
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import myApi from "../utils/api";
 
@@ -16,6 +17,7 @@ function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
   const [isConfirmDeletePopupOpen, setConfirmDeletePopupOpen] = React.useState(false);
+  const [isAuthInfoPopupOpen, setAuthInfoPopupOpen] = React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState({link: "", name: "", isOpen: false});
   const [selectedCardDelete, setSelectedCardDelete] = React.useState({});
   const [currentUser, setCurrentUser] = React.useState({});
@@ -52,6 +54,10 @@ function App() {
       setConfirmDeletePopupOpen(!isConfirmDeletePopupOpen);
       setSelectedCardDelete(card);
   }
+
+    function handleAuthInfoClick() {
+        setAuthInfoPopupOpen(!isAuthInfoPopupOpen);
+    }
 
   function handleCardClick(card) {
       setSelectedCard({link: card.link, name: card.name, isOpen: true});
@@ -151,6 +157,10 @@ function App() {
             isOpen={isEditAvatarPopupOpen}
             onClose={closeAllPopups}
             onUpdateAvatar={handleUpdateAvatar}
+          />
+          <InfoTooltip
+              isOpen={isAuthInfoPopupOpen}
+              onClose={closeAllPopups}
           />
       </div>
       </CurrentUserContext.Provider>
