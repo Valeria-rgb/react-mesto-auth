@@ -37,10 +37,13 @@
 @import url("./blocks/popup/__close-button/popup__close-button.css");
 @import url("blocks/popup/__close-button/_add/popup__close-button_add.css");
 @import url("./blocks/popup/__close-button/_photo/popup__close-button_photo.css");
+@import url("./blocks/popup/__close-button/_auth-info/popup__close-button_auth-info.css");
 @import url("./blocks/popup/__form/popup__form.css");
 @import url("./blocks/popup/__title/popup__title.css");
 @import url("./blocks/popup/__title/_add/popup__title_add.css");
 @import url("./blocks/popup/__title/_delete/popup__title_delete.css");
+@import url("./blocks/popup/__icon/popup__icon.css");
+@import url("./blocks/popup/__message/popup__message.css");
 @import url("./blocks/popup/__input/popup__input.css");
 @import url("./blocks/popup/__input/_type_error/popup__input_type_error.css");
 @import url("./blocks/popup/__error/popup__error.css");
