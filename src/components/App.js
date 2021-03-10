@@ -8,7 +8,8 @@ import EditProfilePopup from '../components/EditProfilePopup';
 import EditAvatarPopup from '../components/EditAvatarPopup';
 import AddPlacePopup from '../components/AddPlacePopup';
 import ConfirmDeletePopup from "../components/ConfirmDeletePopup";
-import InfoTooltip from "../components/InfoTooltip"
+import InfoTooltip from "../components/InfoTooltip";
+import Login from "../components/Login";
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import myApi from "../utils/api";
 

@@ -13,11 +13,11 @@ function InfoTooltip ({ isOpen, isSuccess, onClose}) {
                     onClick={onClose}
                 />
                 <div className={`popup__form`}>
-                <img
-                    className="popup__icon"
-                    src={isSuccess ? success : fail}
-                    alt={'Иконка результата авторизации'}/>
-                <p className="popup__message">{message}</p>
+                    <img
+                      className="popup__icon"
+                      src={isSuccess ? success : fail}
+                      alt={'Иконка результата авторизации'}/>
+                    <p className="popup__message">{message}</p>
                 </div>
             </div>
         </div>
