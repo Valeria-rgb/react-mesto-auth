@@ -10,6 +10,7 @@ import AddPlacePopup from '../components/AddPlacePopup';
 import ConfirmDeletePopup from "../components/ConfirmDeletePopup";
 import InfoTooltip from "../components/InfoTooltip";
 import Login from "../components/Login";
+import Register from "../components/Register";
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import myApi from "../utils/api";
 
