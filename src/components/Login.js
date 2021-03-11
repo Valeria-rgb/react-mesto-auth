@@ -4,6 +4,14 @@ function Login({onLogin}) {
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
 
+    function changeEmail(e) {
+        setEmail(e.target.value);
+    }
+
+    function changePassword(e) {
+        setPassword(e.target.value);
+    }
+
     function handleSubmit(e) {
         e.preventDefault();
         onLogin(email, password);
@@ -23,18 +31,25 @@ function Login({onLogin}) {
                     name="email"
                     type="email"
                     placeholder="Email"
-                    isRequired={true}>
+                    value={email}
+                    isRequired={true}
+                    onChange={changeEmail}>
                 </input>
                 <input
                     className="auth__input"
                     name="password"
                     type="password"
                     placeholder="Пароль"
-                    maxLength={30}>
-                    isRequired={true}>
+                    value={password}
+                    maxLength={30}
+                    isRequired={true}
+                    onChange={changePassword}>
                 </input>
             </form>
-            <button>Войти</button>
+            <button
+                className="auth__submit"
+                type="submit"
+                onSubmit={handleSubmit}>Войти</button>
         </section>
     );
 }

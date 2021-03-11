@@ -1,7 +1,4 @@
-import success from "../images/success.svg";
-import fail from "../images/fail.svg";
-
-function InfoTooltip ({ isOpen, isSuccess, onClose}) {
+function InfoTooltip ({ isOpen, isSuccess, onClose }) {
     const message = isSuccess ? 'Вы успешно зарегистрировались!' : 'Что-то пошло не так! Попробуйте ещё раз.';
 
     return (
@@ -15,13 +12,13 @@ function InfoTooltip ({ isOpen, isSuccess, onClose}) {
                 <div className={`popup__form`}>
                     <img
                       className="popup__icon"
-                      src={isSuccess ? success : fail}
+                      src={isSuccess ? "../images/success.svg" : "../images/fail.svg"}
                       alt={'Иконка результата авторизации'}/>
                     <p className="popup__message">{message}</p>
                 </div>
             </div>
         </div>
     )
-};
+}
 
 export default InfoTooltip;

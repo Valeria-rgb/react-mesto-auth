@@ -81,6 +81,47 @@ class Api {
         })
     }
 
+    signUp(email, password) {
+        return this._sendData('sign-up', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: {
+                    email,
+                    password,
+                }},
+            true,
+        );
+    }
+
+    signIn(email, password) {
+        return this._sendData('sign-in', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: {
+                    email,
+                    password,
+                }},
+            true,
+        );
+    }
+
+    tokenCheck (jwt) {
+        return this._fetch(
+            'users/me',
+            {
+                headers: {
+                    'Authorization': `Bearer ${jwt}`,
+                    'Content-Type': 'application/json'
+                },
+            },
+            true,
+        );
+    }
+
 }
 
 const myApi = new Api({

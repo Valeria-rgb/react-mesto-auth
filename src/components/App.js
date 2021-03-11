@@ -1,4 +1,5 @@
 import React from "react";
+import { Route, Switch, Redirect, BrowserRouter, useHistory } from "react-router-dom";
 import '../index.css';
 import Header from '../components/Header';
 import Main from '../components/Main';
@@ -11,6 +12,7 @@ import ConfirmDeletePopup from "../components/ConfirmDeletePopup";
 import InfoTooltip from "../components/InfoTooltip";
 import Login from "../components/Login";
 import Register from "../components/Register";
+import ProtectedRoute from "../components/ProtectedRoute";
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import myApi from "../utils/api";
 
@@ -21,24 +23,52 @@ function App() {
   const [isConfirmDeletePopupOpen, setConfirmDeletePopupOpen] = React.useState(false);
   const [isAuthInfoPopupOpen, setAuthInfoPopupOpen] = React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState({link: "", name: "", isOpen: false});
+  const [logged, setLogged] = React.useState(false);
   const [selectedCardDelete, setSelectedCardDelete] = React.useState({});
   const [currentUser, setCurrentUser] = React.useState({});
   const [cards, setCards] = React.useState([]);
 
-  React.useEffect(() => {
-      myApi.getCards()
-          .then((cards) => {
-              setCards(cards);
-          })
-          .catch((err) => console.log(`Упс!: ${err}`))
-  }, []);
+  const history = useHistory();
 
-  React.useEffect(() => {
-      myApi.getUserInfo()
-          .then(data => {
-              setCurrentUser(data)})
-          .catch((err) => console.log(`Упс!: ${err}`))
-  }, []);
+    React.useEffect(() => {
+        if (localStorage.getItem('jwt')) {
+            const jwt = localStorage.getItem('jwt')
+            myApi.tokenCheck(jwt)
+                .then((data) => {
+                    dataInitialisation(data.data.email);
+                    setLogged(true);
+                    history.push('/');
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
+    }, [history]);
+
+    function dataInitialisation(email) {
+        myApi.getUserInfo()
+            .then(data => {
+                setCurrentUser({ email, ...data });
+                return myApi.getCards();
+            })
+            .then(cards => setCards(cards))
+            .catch(err => console.log(err));
+    }
+
+  // React.useEffect(() => {
+  //     myApi.getCards()
+  //         .then((cards) => {
+  //             setCards(cards);
+  //         })
+  //         .catch((err) => console.log(`Упс!: ${err}`))
+  // }, []);
+  //
+  // React.useEffect(() => {
+  //     myApi.getUserInfo()
+  //         .then(data => {
+  //             setCurrentUser(data)})
+  //         .catch((err) => console.log(`Упс!: ${err}`))
+  // }, []);
 
   function handleEditAvatarClick() {
       setIsEditAvatarPopupOpen(!isEditAvatarPopupOpen);
@@ -114,11 +144,41 @@ function App() {
           .catch((err) => console.log(`Упс!: ${err}`));
   }
 
+    function handleRegister(email, password) {
+        myApi.signUp(email, password)
+            .then(() => {
+                setLogged(true);
+                handleAuthInfoClick();
+            })
+            .catch((err) => {
+                handleAuthInfoClick();
+                console.log(err);
+            });
+    }
+
+    function handleLogIn (email, password) {
+        myApi.signIn(email, password)
+            .then(({ token }) => {
+                localStorage.setItem('jwt', token);
+                return myApi.getUserInfo();
+            })
+            .then(() => {
+                dataInitialisation(email)
+                setLogged(true);
+                history.push('/');
+            })
+            .catch((err) => {
+                handleAuthInfoClick();
+                console.log(err);
+            });
+    }
+
   function closeAllPopups() {
       setIsAddPlacePopupOpen(false);
       setIsEditProfilePopupOpen(false);
       setIsEditAvatarPopupOpen(false);
       setConfirmDeletePopupOpen(false);
+      setAuthInfoPopupOpen(false);
       setSelectedCard({link: "", name: "", isOpen: false});
   }
 
@@ -126,15 +186,37 @@ function App() {
       <CurrentUserContext.Provider value={currentUser}>
         <div className="root">
           <Header/>
-          <Main
-            onEditAvatar={handleEditAvatarClick}
-            onEditProfile={handleEditProfileClick}
-            onAddPlace={handleAddPlaceClick}
-            onCardClick={handleCardClick}
-            cards={cards}
-            onCardLike={handleCardLike}
-            onCardDelete={handleConfirmDeleteClick}
+          <BrowserRouter>
+          <Switch>
+              {!logged &&
+              <Route path="/sign-in">
+                  <Login
+                      onLogIn={handleLogIn}
+                  />
+              </Route>
+              }
+              {!logged &&
+              <Route path="/sign-up">
+                  <Register
+                      onRegister={handleRegister}
+                  />
+              </Route>
+              }
+
+          <ProtectedRoute
+              exact path="/"
+              component={Main}
+              loggedIn={logged}
+              onEditAvatar={handleEditAvatarClick}
+              onEditProfile={handleEditProfileClick}
+              onAddPlace={handleAddPlaceClick}
+              onCardClick={handleCardClick}
+              cards={cards}
+              onCardLike={handleCardLike}
+              onCardDelete={handleConfirmDeleteClick}
           />
+          </Switch>
+          </BrowserRouter>
           <Footer/>
           <EditProfilePopup
               isOpen={isEditProfilePopupOpen}

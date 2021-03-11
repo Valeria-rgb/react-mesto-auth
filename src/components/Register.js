@@ -5,6 +5,14 @@ function Register({onRegister}) {
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
 
+    function changeEmail(e) {
+        setEmail(e.target.value);
+    }
+
+    function changePassword(e) {
+        setPassword(e.target.value);
+    }
+
     function handleSubmit(e) {
         e.preventDefault();
         onRegister(email, password);
@@ -24,18 +32,25 @@ function Register({onRegister}) {
                     name="email"
                     type="email"
                     placeholder="Email"
-                    isRequired={true}>
+                    value={email}
+                    isRequired={true}
+                    onChange={changeEmail}>
                 </input>
                 <input
                     className="auth__input"
                     name="password"
                     type="password"
                     placeholder="Пароль"
+                    value={password}
                     maxLength={30}>
-                    isRequired={true}>
+                    isRequired={true}
+                    onChange={changePassword}>
                 </input>
             </form>
-            <button>Зарегистрироваться</button>
+            <button
+                className="auth__submit"
+                type="submit"
+                onSubmit={handleSubmit}>Зарегистрироваться</button>
             <p className="auth__route">
                 Уже зарегистрированы?<Link to="/sign-in" href="" className="auth__link"> Войти</Link>
             </p>

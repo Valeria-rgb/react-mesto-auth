@@ -4,8 +4,13 @@
 @import url("./blocks/header/header.css");
 @import url("./blocks/header/__logo/header__logo.css");
 @import url("./blocks/navigation/navigation.css");
-@import url("blocks/navigation/__email/navigation__email.css");
-@import url("blocks/navigation/__logout/navigation__logout.css");
+@import url("./blocks/navigation/__email/navigation__email.css");
+@import url("./blocks/navigation/__logout/navigation__logout.css");
+@import url("./blocks/auth/auth.css");
+@import url("./blocks/auth/__title/auth__title.css");
+@import url("./blocks/auth/__form/auth__form.css");
+@import url("./blocks/auth/__input/auth__input.css");
+@import url("./blocks/auth/__submit/auth__submit.css");
 @import url("./blocks/profile/profile.css");
 @import url("./blocks/profile/__info/profile__info.css");
 @import url("./blocks/profile/__avatar-container/profile__avatar-container.css");
