@@ -42,13 +42,13 @@ function Register({onRegister}) {
                     type="password"
                     placeholder="Пароль"
                     value={password}
-                    maxLength={30}>
+                    maxLength={30}
                     isRequired={true}
                     onChange={changePassword}>
                 </input>
             </form>
             <button
-                className="auth__submit"
+                className="auth__submit auth__submit_register"
                 type="submit"
                 onSubmit={handleSubmit}>Зарегистрироваться</button>
             <p className="auth__route">

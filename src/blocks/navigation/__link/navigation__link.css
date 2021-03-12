@@ -1,4 +1,4 @@
-.navigation__logout {
+.navigation__link {
   height: 22px;
   color: #A9A9A9;
   font-size: 18px;
@@ -9,13 +9,14 @@
   padding: 0;
   border: none;
   margin-left: 24px;
+  text-decoration: none;
 }
 
-.navigation__logout:focus {
+.navigation__link:focus {
   outline: none;
 }
 
-.navigation__logout:hover {
+.navigation__link:hover {
   opacity: 60%;
   cursor: pointer;
   transition: 0.2s ease;

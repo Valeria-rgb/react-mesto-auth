@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Switch, Redirect, BrowserRouter, useHistory } from "react-router-dom";
+import { Route, Switch, Redirect, useHistory } from "react-router-dom";
 import '../index.css';
 import Header from '../components/Header';
 import Main from '../components/Main';
@@ -148,6 +148,7 @@ function App() {
         myApi.signUp(email, password)
             .then(() => {
                 setLogged(true);
+                history.push('/');
                 handleAuthInfoClick();
             })
             .catch((err) => {
@@ -165,7 +166,7 @@ function App() {
             .then(() => {
                 dataInitialisation(email)
                 setLogged(true);
-                history.push('/');
+                // history.push('/');
             })
             .catch((err) => {
                 handleAuthInfoClick();
@@ -185,23 +186,19 @@ function App() {
   return (
       <CurrentUserContext.Provider value={currentUser}>
         <div className="root">
-          <Header/>
-          <BrowserRouter>
+            <Header loggedIn={logged}/>
           <Switch>
-              {!logged &&
-              <Route path="/sign-in">
-                  <Login
-                      onLogIn={handleLogIn}
-                  />
-              </Route>
-              }
               {!logged &&
               <Route path="/sign-up">
                   <Register
-                      onRegister={handleRegister}
-                  />
-              </Route>
-              }
+                      onRegister={handleRegister}/>
+              </Route>}
+
+              {!logged &&
+              <Route path="/sign-in">
+                  <Login
+                      onLogIn={handleLogIn}/>
+              </Route>}
 
           <ProtectedRoute
               exact path="/"
@@ -216,36 +213,36 @@ function App() {
               onCardDelete={handleConfirmDeleteClick}
           />
           </Switch>
-          </BrowserRouter>
-          <Footer/>
-          <EditProfilePopup
+            {logged && <Footer/>}
+
+            {logged && <EditProfilePopup
               isOpen={isEditProfilePopupOpen}
               onClose={closeAllPopups}
-              onUpdateUser={handleUpdateUser}
-          />
-          <AddPlacePopup
+              onUpdateUser={handleUpdateUser}/>}
+
+            {logged && <AddPlacePopup
               isOpen={isAddPlacePopupOpen}
               onClose={closeAllPopups}
-              onAddPlace={handleAddPlaceSubmit}
-          />
-          <ImagePopup
+              onAddPlace={handleAddPlaceSubmit}/>}
+
+            {logged && <ImagePopup
               card={selectedCard}
-              onClose={closeAllPopups}
-          />
-          <ConfirmDeletePopup
+              onClose={closeAllPopups}/>}
+            {logged && <ConfirmDeletePopup
               isOpen={isConfirmDeletePopupOpen}
               onClose={closeAllPopups}
-              onDeleteCard={handleCardDelete}
-          />
-          <EditAvatarPopup
+              onDeleteCard={handleCardDelete}/>}
+
+            {logged && <EditAvatarPopup
             isOpen={isEditAvatarPopupOpen}
             onClose={closeAllPopups}
-            onUpdateAvatar={handleUpdateAvatar}
-          />
-          <InfoTooltip
+            onUpdateAvatar={handleUpdateAvatar}/>}
+
+            {logged && <InfoTooltip
               isOpen={isAuthInfoPopupOpen}
               onClose={closeAllPopups}
-          />
+              isSuccess={logged}/>}
+
       </div>
       </CurrentUserContext.Provider>
   );

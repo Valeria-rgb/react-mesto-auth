@@ -110,7 +110,7 @@ class Api {
     }
 
     tokenCheck (jwt) {
-        return this._fetch(
+        return this._sendData(
             'users/me',
             {
                 headers: {
