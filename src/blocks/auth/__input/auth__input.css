@@ -7,7 +7,18 @@
   border: none;
   background-color: transparent;
   border-bottom: 2px solid #CCCCCC;
-  width: 358px;
   padding: 0;
   margin-bottom: 32px;
+}
+
+@media screen and (min-width: 300px) {
+  .auth__input {
+    width: 260px;
+  }
+}
+
+@media screen and (min-width: 960px) {
+  .auth__input {
+    width: 358px;
+  }
 }

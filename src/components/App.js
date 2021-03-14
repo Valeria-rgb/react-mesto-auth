@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Switch, Redirect, useHistory } from "react-router-dom";
+import { Route, Switch, useHistory } from "react-router-dom";
 import '../index.css';
 import Header from '../components/Header';
 import Main from '../components/Main';
@@ -34,8 +34,7 @@ function App() {
         if (localStorage.getItem('jwt')) {
             const jwt = localStorage.getItem('jwt')
             myApi.tokenCheck(jwt)
-                .then((data) => {
-                    dataInitialisation(data.data.email);
+                .then(() => {
                     setLogged(true);
                     history.push('/');
                 })
@@ -44,31 +43,31 @@ function App() {
                 });
         }
     }, [history]);
+    //
+    // function dataInitialisation(email) {
+    //     myApi.getUserInfo()
+    //         .then(data => {
+    //             setCurrentUser({ email, ...data });
+    //             return myApi.getCards();
+    //         })
+    //         .then(cards => setCards(cards))
+    //         .catch(err => console.log(err));
+    // }
 
-    function dataInitialisation(email) {
-        myApi.getUserInfo()
-            .then(data => {
-                setCurrentUser({ email, ...data });
-                return myApi.getCards();
-            })
-            .then(cards => setCards(cards))
-            .catch(err => console.log(err));
-    }
+  React.useEffect(() => {
+      myApi.getCards()
+          .then((cards) => {
+              setCards(cards);
+          })
+          .catch((err) => console.log(`Упс!: ${err}`))
+  }, []);
 
-  // React.useEffect(() => {
-  //     myApi.getCards()
-  //         .then((cards) => {
-  //             setCards(cards);
-  //         })
-  //         .catch((err) => console.log(`Упс!: ${err}`))
-  // }, []);
-  //
-  // React.useEffect(() => {
-  //     myApi.getUserInfo()
-  //         .then(data => {
-  //             setCurrentUser(data)})
-  //         .catch((err) => console.log(`Упс!: ${err}`))
-  // }, []);
+  React.useEffect(() => {
+      myApi.getUserInfo()
+          .then(data => {
+              setCurrentUser(data)})
+          .catch((err) => console.log(`Упс!: ${err}`))
+  }, []);
 
   function handleEditAvatarClick() {
       setIsEditAvatarPopupOpen(!isEditAvatarPopupOpen);
@@ -90,6 +89,7 @@ function App() {
     function handleAuthInfoClick() {
         setAuthInfoPopupOpen(!isAuthInfoPopupOpen);
     }
+
 
   function handleCardClick(card) {
       setSelectedCard({link: card.link, name: card.name, isOpen: true});
@@ -164,9 +164,9 @@ function App() {
                 return myApi.getUserInfo();
             })
             .then(() => {
-                dataInitialisation(email)
+                // dataInitialisation(email)
                 setLogged(true);
-                // history.push('/');
+                history.push('/');
             })
             .catch((err) => {
                 handleAuthInfoClick();
@@ -238,10 +238,10 @@ function App() {
             onClose={closeAllPopups}
             onUpdateAvatar={handleUpdateAvatar}/>}
 
-            {logged && <InfoTooltip
+            <InfoTooltip
               isOpen={isAuthInfoPopupOpen}
               onClose={closeAllPopups}
-              isSuccess={logged}/>}
+              isSuccess={logged}/>
 
       </div>
       </CurrentUserContext.Provider>

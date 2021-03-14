@@ -25,6 +25,7 @@ function Login({onLogin}) {
             <form
                 className="auth__form"
                 name ="login"
+                onSubmit={handleSubmit}
                 noValidate>
                 <input
                     className="auth__input"
@@ -32,8 +33,7 @@ function Login({onLogin}) {
                     type="email"
                     placeholder="Email"
                     value={email}
-                    isRequired={true}
-                    onChange={changeEmail}>
+                    onChange={changeEmail} required>
                 </input>
                 <input
                     className="auth__input"
@@ -41,15 +41,15 @@ function Login({onLogin}) {
                     type="password"
                     placeholder="Пароль"
                     value={password}
-                    maxLength={30}
-                    isRequired={true}
-                    onChange={changePassword}>
+                    minLength="5"
+                    maxLength="30"
+                    onChange={changePassword} required>
                 </input>
+                <button
+                    className="auth__submit"
+                    type="submit">Войти</button>
             </form>
-            <button
-                className="auth__submit"
-                type="submit"
-                onSubmit={handleSubmit}>Войти</button>
+
         </section>
     );
 }

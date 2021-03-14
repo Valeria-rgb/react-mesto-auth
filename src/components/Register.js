@@ -25,7 +25,8 @@ function Register({onRegister}) {
             <h1 className="auth__title">Регистрация</h1>
             <form
                 className="auth__form"
-                name ="login"
+                name ="signup"
+                onSubmit={handleSubmit}
                 noValidate>
                 <input
                     className="auth__input"
@@ -33,8 +34,7 @@ function Register({onRegister}) {
                     type="email"
                     placeholder="Email"
                     value={email}
-                    isRequired={true}
-                    onChange={changeEmail}>
+                    onChange={changeEmail} required>
                 </input>
                 <input
                     className="auth__input"
@@ -42,15 +42,15 @@ function Register({onRegister}) {
                     type="password"
                     placeholder="Пароль"
                     value={password}
-                    maxLength={30}
-                    isRequired={true}
-                    onChange={changePassword}>
+                    minLength="5"
+                    maxLength="30"
+                    onChange={changePassword} required>
                 </input>
+                <button
+                    className="auth__submit auth__submit_register"
+                    type="submit">Зарегистрироваться</button>
             </form>
-            <button
-                className="auth__submit auth__submit_register"
-                type="submit"
-                onSubmit={handleSubmit}>Зарегистрироваться</button>
+
             <p className="auth__route">
                 Уже зарегистрированы?<Link to="/sign-in" href="" className="auth__link"> Войти</Link>
             </p>

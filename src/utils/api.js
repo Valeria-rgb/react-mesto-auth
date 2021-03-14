@@ -82,39 +82,41 @@ class Api {
     }
 
     signUp(email, password) {
-        return this._sendData('sign-up', {
-                method: 'POST',
+        return this._sendData('signup', {
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
                 },
-                body: {
-                    email,
-                    password,
-                }},
+                body: JSON.stringify({email, password})
+            },
             true,
         );
     }
 
     signIn(email, password) {
-        return this._sendData('sign-in', {
+        return this._sendData('signin', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
                 },
                 body: {
                     email,
                     password,
-                }},
+                }
+            },
             true,
         );
     }
 
-    tokenCheck (jwt) {
+    tokenCheck(jwt) {
         return this._sendData(
-            'users/me',
-            {
+            'users/me', {
+                method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${jwt}`,
+                    'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
             },
@@ -124,6 +126,7 @@ class Api {
 
 }
 
+
 const myApi = new Api({
     url: "https://mesto.nomoreparties.co/v1/cohort-18/",
     headers: {
@@ -131,6 +134,7 @@ const myApi = new Api({
         'Content-Type': 'application/json'
     }
 });
+
 
 export default myApi;
 
