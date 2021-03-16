@@ -33,7 +33,7 @@ function App() {
     React.useEffect(() => {
         if (localStorage.getItem('jwt')) {
             const jwt = localStorage.getItem('jwt')
-            myApi.tokenCheck(jwt)
+            myApi.getToken(jwt)
                 .then(() => {
                     setLogged(true);
                     history.push('/');
@@ -43,16 +43,6 @@ function App() {
                 });
         }
     }, [history]);
-    //
-    // function dataInitialisation(email) {
-    //     myApi.getUserInfo()
-    //         .then(data => {
-    //             setCurrentUser({ email, ...data });
-    //             return myApi.getCards();
-    //         })
-    //         .then(cards => setCards(cards))
-    //         .catch(err => console.log(err));
-    // }
 
   React.useEffect(() => {
       myApi.getCards()
@@ -164,7 +154,6 @@ function App() {
                 return myApi.getUserInfo();
             })
             .then(() => {
-                // dataInitialisation(email)
                 setLogged(true);
                 history.push('/');
             })
@@ -173,6 +162,10 @@ function App() {
                 console.log(err);
             });
     }
+
+    function handleLogOut() {
+                history.push('/sign-in');
+            }
 
   function closeAllPopups() {
       setIsAddPlacePopupOpen(false);
@@ -186,7 +179,8 @@ function App() {
   return (
       <CurrentUserContext.Provider value={currentUser}>
         <div className="root">
-            <Header loggedIn={logged}/>
+            <Header loggedIn={logged}
+                    onLogOut={handleLogOut}/>
           <Switch>
               {!logged &&
               <Route path="/sign-up">
@@ -197,7 +191,7 @@ function App() {
               {!logged &&
               <Route path="/sign-in">
                   <Login
-                      onLogIn={handleLogIn}/>
+                      onLogin={handleLogIn}/>
               </Route>}
 
           <ProtectedRoute

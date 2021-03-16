@@ -82,60 +82,70 @@ class Api {
     }
 
     signUp(email, password) {
-        return this._sendData('signup', {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                },
-                body: JSON.stringify({email, password})
+        return fetch("https://auth.nomoreparties.co/signup", {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
             },
-            true,
-        );
-    }
+            body: JSON.stringify({email, password})
+        })
+            .then((res) => {
+                if (res.ok) {
+                    return res.json();
+                }
+                return Promise.reject(`Произошла ошибка: ${res.status}`);
+            })
+    };
 
     signIn(email, password) {
-        return this._sendData('signin', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                },
-                body: {
-                    email,
-                    password,
+        return fetch("https://auth.nomoreparties.co/signin", {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({email, password})
+        })
+            .then((res) => {
+                if (res.ok) {
+                    return res.json();
                 }
-            },
-            true,
-        );
-    }
+                return Promise.reject(`Произошла ошибка: ${res.status}`);
+            })
+    };
 
-    tokenCheck(jwt) {
-        return this._sendData(
-            'users/me', {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${jwt}`,
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-            },
-            true,
-        );
+    getToken(jwt) {
+        return fetch("https:/auth.nomoreparties.co/users/me", {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${jwt}`,
+                'Content-Type': 'application/json'
+            }
+        })
+            .then((response) => {
+                try {
+                    if (response.status === 200) {
+                        return response.json();
+                    }
+                } catch (e) {
+                    return (e)
+                }
+            })
+            .then((res) => {
+                return res;
+            })
+            .catch((err) => console.log(err));
     }
-
 }
-
 
 const myApi = new Api({
     url: "https://mesto.nomoreparties.co/v1/cohort-18/",
     headers: {
-        authorization: '4ce0d8a0-2bf1-4ede-8511-f9af6b75d79f',
-        'Content-Type': 'application/json'
+        "Authorization": "4ce0d8a0-2bf1-4ede-8511-f9af6b75d79f",
+        "Content-Type": "application/json"
     }
 });
-
-
 export default myApi;
 
 
