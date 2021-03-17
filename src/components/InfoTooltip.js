@@ -10,8 +10,7 @@ function InfoTooltip ({ isOpen, isSuccess, onClose }) {
                 <button
                     className={`popup__close-button popup__close-button_auth-info`}
                     type="button"
-                    onClick={onClose}
-                />
+                    onClick={onClose}/>
                 <div className={`popup__form`}>
                     <img
                       className="popup__icon"

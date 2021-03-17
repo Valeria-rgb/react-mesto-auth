@@ -107,6 +107,21 @@ class Api {
             },
             body: JSON.stringify({email, password})
         })
+            .then(res => res.json())
+            .then((token) => {
+                localStorage.setItem('jwt', token)
+            })
+            .catch((err) => console.log(err))
+    }
+
+    getToken(jwt) {
+        return fetch("https:/auth.nomoreparties.co/users/me", {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ${jwt}',
+                'Content-Type': 'application/json'
+            }
+        })
             .then((res) => {
                 if (res.ok) {
                     return res.json();
@@ -114,29 +129,6 @@ class Api {
                 return Promise.reject(`Произошла ошибка: ${res.status}`);
             })
     };
-
-    getToken(jwt) {
-        return fetch("https:/auth.nomoreparties.co/users/me", {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${jwt}`,
-                'Content-Type': 'application/json'
-            }
-        })
-            .then((response) => {
-                try {
-                    if (response.status === 200) {
-                        return response.json();
-                    }
-                } catch (e) {
-                    return (e)
-                }
-            })
-            .then((res) => {
-                return res;
-            })
-            .catch((err) => console.log(err));
-    }
 }
 
 const myApi = new Api({

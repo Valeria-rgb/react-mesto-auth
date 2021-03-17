@@ -30,20 +30,6 @@ function App() {
 
   const history = useHistory();
 
-    React.useEffect(() => {
-        if (localStorage.getItem('jwt')) {
-            const jwt = localStorage.getItem('jwt')
-            myApi.getToken(jwt)
-                .then(() => {
-                    setLogged(true);
-                    history.push('/');
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        }
-    }, [history]);
-
   React.useEffect(() => {
       myApi.getCards()
           .then((cards) => {
@@ -55,9 +41,10 @@ function App() {
   React.useEffect(() => {
       myApi.getUserInfo()
           .then(data => {
-              setCurrentUser(data)})
-          .catch((err) => console.log(`Упс!: ${err}`))
-  }, []);
+              setCurrentUser({...data})
+          })
+                  .catch((err) => console.log(`Упс!: ${err}`))
+          }, []);
 
   function handleEditAvatarClick() {
       setIsEditAvatarPopupOpen(!isEditAvatarPopupOpen);
@@ -138,6 +125,7 @@ function App() {
         myApi.signUp(email, password)
             .then(() => {
                 setLogged(true);
+                // setCurrenUser({... data});
                 history.push('/');
                 handleAuthInfoClick();
             })
@@ -149,12 +137,13 @@ function App() {
 
     function handleLogIn (email, password) {
         myApi.signIn(email, password)
-            .then(({ token }) => {
+            .then(( token ) => {
                 localStorage.setItem('jwt', token);
                 return myApi.getUserInfo();
             })
-            .then(() => {
+            .then((data) => {
                 setLogged(true);
+                setCurrentUser({email,...data});
                 history.push('/');
             })
             .catch((err) => {
@@ -164,8 +153,10 @@ function App() {
     }
 
     function handleLogOut() {
-                history.push('/sign-in');
-            }
+        setLogged(false);
+        setCurrentUser({});
+        history.push('/sign-in');
+  }
 
   function closeAllPopups() {
       setIsAddPlacePopupOpen(false);
@@ -179,65 +170,58 @@ function App() {
   return (
       <CurrentUserContext.Provider value={currentUser}>
         <div className="root">
-            <Header loggedIn={logged}
-                    onLogOut={handleLogOut}/>
-          <Switch>
-              {!logged &&
-              <Route path="/sign-up">
+            <Header
+                loggedIn={logged}
+                onLogOut={handleLogOut}/>
+            <Switch>
+                {!logged &&
+                <Route path="/sign-up">
                   <Register
                       onRegister={handleRegister}/>
-              </Route>}
-
-              {!logged &&
-              <Route path="/sign-in">
+                </Route>}
+                {!logged &&
+                <Route path="/sign-in">
                   <Login
                       onLogin={handleLogIn}/>
-              </Route>}
-
-          <ProtectedRoute
-              exact path="/"
-              component={Main}
-              loggedIn={logged}
-              onEditAvatar={handleEditAvatarClick}
-              onEditProfile={handleEditProfileClick}
-              onAddPlace={handleAddPlaceClick}
-              onCardClick={handleCardClick}
-              cards={cards}
-              onCardLike={handleCardLike}
-              onCardDelete={handleConfirmDeleteClick}
-          />
-          </Switch>
+                </Route>}
+            <ProtectedRoute
+                exact path="/"
+                component={Main}
+                loggedIn={logged}
+                onEditAvatar={handleEditAvatarClick}
+                onEditProfile={handleEditProfileClick}
+                onAddPlace={handleAddPlaceClick}
+                onCardClick={handleCardClick}
+                cards={cards}
+                setCurrentUser={setCurrentUser}
+                onCardLike={handleCardLike}
+                onCardDelete={handleConfirmDeleteClick}/>
+            </Switch>
             {logged && <Footer/>}
-
             {logged && <EditProfilePopup
-              isOpen={isEditProfilePopupOpen}
-              onClose={closeAllPopups}
-              onUpdateUser={handleUpdateUser}/>}
-
+                isOpen={isEditProfilePopupOpen}
+                onClose={closeAllPopups}
+                onUpdateUser={handleUpdateUser}/>}
             {logged && <AddPlacePopup
-              isOpen={isAddPlacePopupOpen}
-              onClose={closeAllPopups}
-              onAddPlace={handleAddPlaceSubmit}/>}
-
+                isOpen={isAddPlacePopupOpen}
+                onClose={closeAllPopups}
+                onAddPlace={handleAddPlaceSubmit}/>}
             {logged && <ImagePopup
-              card={selectedCard}
-              onClose={closeAllPopups}/>}
+                card={selectedCard}
+                onClose={closeAllPopups}/>}
             {logged && <ConfirmDeletePopup
-              isOpen={isConfirmDeletePopupOpen}
-              onClose={closeAllPopups}
-              onDeleteCard={handleCardDelete}/>}
-
+                isOpen={isConfirmDeletePopupOpen}
+                onClose={closeAllPopups}
+                onDeleteCard={handleCardDelete}/>}
             {logged && <EditAvatarPopup
-            isOpen={isEditAvatarPopupOpen}
-            onClose={closeAllPopups}
-            onUpdateAvatar={handleUpdateAvatar}/>}
-
+                isOpen={isEditAvatarPopupOpen}
+                onClose={closeAllPopups}
+                onUpdateAvatar={handleUpdateAvatar}/>}
             <InfoTooltip
-              isOpen={isAuthInfoPopupOpen}
-              onClose={closeAllPopups}
-              isSuccess={logged}/>
-
-      </div>
+                isOpen={isAuthInfoPopupOpen}
+                onClose={closeAllPopups}
+                isSuccess={logged}/>
+        </div>
       </CurrentUserContext.Provider>
   );
 }

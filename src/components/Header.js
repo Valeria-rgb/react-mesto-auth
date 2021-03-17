@@ -1,10 +1,9 @@
-import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import React from "react";
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import {Link, useLocation} from "react-router-dom";
 
-function Header({ logged, onLogOut, email}) {
+function Header({ loggedIn, onLogOut}) {
     const currentUser = React.useContext(CurrentUserContext);
-
     const location = useLocation();
     const currentPath = location.pathname;
 
@@ -15,14 +14,17 @@ function Header({ logged, onLogOut, email}) {
     return (
         <header className="header">
             <div className="header__logo"/>
-            { !logged &&
+            { !loggedIn &&
+            <nav className="navigation">
                     <Link to={currentPath === "/sign-in" ? "/sign-up" : "/sign-in"}
                           className="navigation__link">
-                        {currentPath === "/sign-in" ? 'Регистрация' : 'Войти'}
+                        {currentPath === "/sign-in" ? "Регистрация" : "Войти"}
                     </Link>
+            </nav>
             }
-            { logged && <nav className="navigation">
-                <p className="navigation__email">{email}</p>
+            { loggedIn &&
+            <nav className="navigation">
+                <p className="navigation__email">{currentUser.email}</p>
                 <button className="navigation__link" onClick={handleLogOut}>Выйти</button>
             </nav>}
         </header>
