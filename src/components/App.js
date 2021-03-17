@@ -27,8 +27,21 @@ function App() {
   const [selectedCardDelete, setSelectedCardDelete] = React.useState({});
   const [currentUser, setCurrentUser] = React.useState({});
   const [cards, setCards] = React.useState([]);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const history = useHistory();
+
+    React.useEffect(() => {
+        if (localStorage.getItem('jwt')) {
+            const jwt = localStorage.getItem('jwt')
+        myApi.getToken(jwt)
+            .then(({data}) => {
+                setLogged(true);
+                history.push('/');
+            })
+            .catch((err) => console.log(`Упс!: ${err}`))
+        }
+    }, [history]);
 
   React.useEffect(() => {
       myApi.getCards()
@@ -67,7 +80,6 @@ function App() {
         setAuthInfoPopupOpen(!isAuthInfoPopupOpen);
     }
 
-
   function handleCardClick(card) {
       setSelectedCard({link: card.link, name: card.name, isOpen: true});
   }
@@ -84,28 +96,34 @@ function App() {
   }
 
   function handleCardDelete() {
+      setIsLoading(true);
       myApi.deleteCard(selectedCardDelete._id)
           .then(() => {
               const newCards = cards.filter((c) => c._id !== selectedCardDelete._id);
               setCards(newCards);
               setSelectedCardDelete({});
+              setIsLoading(false);
               closeAllPopups();
           })
           .catch((err) => console.log(`Упс!: ${err}`));
   }
 
   function handleUpdateUser(data) {
-          myApi.changeUserInfo(data)
-              .then(() => {
-                  setCurrentUser({...currentUser, ...data});
-                  closeAllPopups();
-              })
-              .catch((err) => console.log(`Упс!: ${err}`));
-      }
+      setIsLoading(true);
+      myApi.changeUserInfo(data)
+          .then(() => {
+              setIsLoading(false);
+              setCurrentUser({...currentUser, ...data});
+              closeAllPopups();
+          })
+          .catch((err) => console.log(`Упс!: ${err}`));
+  }
 
   function handleUpdateAvatar(avatar) {
+      setIsLoading(true);
       myApi.changeAvatar(avatar)
           .then(() => {
+              setIsLoading(false);
               setCurrentUser({...currentUser, ...avatar});
               closeAllPopups();
           })
@@ -113,8 +131,10 @@ function App() {
   }
 
   function handleAddPlaceSubmit(card) {
+      setIsLoading(true);
       myApi.addCard(card)
           .then((newCard) => {
+              setIsLoading(false);
               setCards([newCard, ...cards]);
               closeAllPopups();
           })
@@ -123,9 +143,9 @@ function App() {
 
     function handleRegister(email, password) {
         myApi.signUp(email, password)
-            .then(() => {
+            .then((data) => {
                 setLogged(true);
-                // setCurrenUser({... data});
+                setCurrentUser({email,...data});
                 history.push('/');
                 handleAuthInfoClick();
             })
@@ -200,10 +220,12 @@ function App() {
             {logged && <Footer/>}
             {logged && <EditProfilePopup
                 isOpen={isEditProfilePopupOpen}
+                isLoading={isLoading}
                 onClose={closeAllPopups}
                 onUpdateUser={handleUpdateUser}/>}
             {logged && <AddPlacePopup
                 isOpen={isAddPlacePopupOpen}
+                isLoading={isLoading}
                 onClose={closeAllPopups}
                 onAddPlace={handleAddPlaceSubmit}/>}
             {logged && <ImagePopup
@@ -211,10 +233,12 @@ function App() {
                 onClose={closeAllPopups}/>}
             {logged && <ConfirmDeletePopup
                 isOpen={isConfirmDeletePopupOpen}
+                isLoading={isLoading}
                 onClose={closeAllPopups}
                 onDeleteCard={handleCardDelete}/>}
             {logged && <EditAvatarPopup
                 isOpen={isEditAvatarPopupOpen}
+                isLoading={isLoading}
                 onClose={closeAllPopups}
                 onUpdateAvatar={handleUpdateAvatar}/>}
             <InfoTooltip

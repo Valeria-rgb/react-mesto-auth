@@ -107,31 +107,31 @@ class Api {
             },
             body: JSON.stringify({email, password})
         })
-            .then(res => res.json())
-            .then((token) => {
-                localStorage.setItem('jwt', token)
+            .then((res => res.json()))
+            .then((data) => {
+                if (data.user) {
+                    localStorage.setItem('jwt', data.jwt);
+                    return data;
+                }
             })
-            .catch((err) => console.log(err))
-    }
+            .catch(err => console.log(err))
+    };
 
     getToken(jwt) {
-        return fetch("https:/auth.nomoreparties.co/users/me", {
+        return fetch("https://auth.nomoreparties.co/users/me", {
             method: 'GET',
             headers: {
-                'Authorization': 'Bearer ${jwt}',
+                'Authorization': `Bearer ${jwt}`,
                 'Content-Type': 'application/json'
             }
         })
-            .then((res) => {
-                if (res.ok) {
-                    return res.json();
-                }
-                return Promise.reject(`Произошла ошибка: ${res.status}`);
-            })
-    };
+            .then(res => res.json())
+            .then(data => data)
+            .catch((err) => console.log(err))
+    }
 }
 
-const myApi = new Api({
+    const myApi = new Api({
     url: "https://mesto.nomoreparties.co/v1/cohort-18/",
     headers: {
         "Authorization": "4ce0d8a0-2bf1-4ede-8511-f9af6b75d79f",

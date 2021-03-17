@@ -1,17 +1,11 @@
 import PopupWithForm from "./PopupWithForm";
 import React from "react";
 
-function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
+function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, isLoading }) {
     const avatarRef = React.useRef();
-    const [isLoading, setIsLoading] = React.useState(false);
-
-    function handleChangeAvatar(e) {
-        avatarRef.current.value = e.target.value;
-    }
 
     function handleSubmit(e) {
         e.preventDefault();
-        setIsLoading(true);
         onUpdateAvatar({
             avatar: avatarRef.current.value,
         });
@@ -31,7 +25,6 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
                     type="url"
                     name="avatar"
                     ref={avatarRef}
-                    onChange={handleChangeAvatar}
                     id="link-of-image" required
                 />
                 <span className="popup__error" id="link-of-image-error"/>
