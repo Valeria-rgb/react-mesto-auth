@@ -1,9 +1,7 @@
 import React from "react";
-import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import {Link, useLocation} from "react-router-dom";
 
-function Header({ loggedIn, onLogOut}) {
-    const currentUser = React.useContext(CurrentUserContext);
+function Header({ loggedIn, onLogOut, email}) {
     const location = useLocation();
     const currentPath = location.pathname;
 
@@ -24,7 +22,7 @@ function Header({ loggedIn, onLogOut}) {
             }
             { loggedIn &&
             <nav className="navigation">
-                <p className="navigation__email">{currentUser.email}</p>
+                <p className="navigation__email">{email}</p>
                 <button className="navigation__link" onClick={handleLogOut}>Выйти</button>
             </nav>}
         </header>

@@ -109,8 +109,9 @@ class Api {
         })
             .then((res => res.json()))
             .then((data) => {
-                if (data.user) {
-                    localStorage.setItem('jwt', data.jwt);
+                const token = data.token;
+                if (token) {
+                    localStorage.setItem('jwt', token);
                     return data;
                 }
             })
@@ -126,12 +127,11 @@ class Api {
             }
         })
             .then(res => res.json())
-            .then(data => data)
             .catch((err) => console.log(err))
     }
 }
 
-    const myApi = new Api({
+const myApi = new Api({
     url: "https://mesto.nomoreparties.co/v1/cohort-18/",
     headers: {
         "Authorization": "4ce0d8a0-2bf1-4ede-8511-f9af6b75d79f",
